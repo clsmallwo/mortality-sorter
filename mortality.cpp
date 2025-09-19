@@ -99,7 +99,6 @@ int main() {
                     sect.push_back(c);
                 }
             }
-            // process last field (if any)
             if (!inQuotes) {
                 switch (buildInc) {
                     case 0: currRow.idx = parseIntSafe(sect); break;
@@ -130,7 +129,6 @@ int main() {
         cout << "Can't open that stuff";
     }
     
-    // Print out the vector contents
     cout << "Loaded rows: " << data.size() << "\n";
     for (const auto &r : data) {
         cout 
