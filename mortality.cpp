@@ -26,94 +26,132 @@ struct rowData {
     double tenToFifteen;  
 };
 
+static int parseIntSafe(const string &text) {
+    try {
+        size_t consumed = 0;
+        int value = stoi(text, &consumed);
+        if (consumed != text.size()) return 0;
+        return value;
+    } catch (...) {
+        return 0;
+    }
+}
+
+static double parseDoubleSafe(const string &text) {
+    try {
+        size_t consumed = 0;
+        double value = stod(text, &consumed);
+        if (consumed != text.size()) return 0.0;
+        return value;
+    } catch (...) {
+        return 0.0;
+    }
+}
+
 int main() {
     ifstream CSV ("WPP2015_MORT_F07_1_LIFE_EXPECTANCY_0_BOTH_SEXES.csv");
     string line = "";
-    string word = "";
     int lnNum = 1;
-    int idxSt = 0;
-    int idxEn;
-    int buildInc;
     vector<rowData> data;
-    rowData currRow;
     if (CSV.is_open()){
         while (getline(CSV, line)) {
-            string sect;
-            lnNum++; 
-            if(lnNum > 17);
-            {
-            for (int i = 0; i < line.length(); i++){
-                if(line[i] == ','){
-                    idxEn = i;
-                }
-                for (int j = idxSt+1; j < idxEn; j++){
-                    sect += line[j];
-                }
-                switch (buildInc) {
-                    case 0:
-                        currRow.idx = stod(sect);
-                        break;
-                    case 1:
-                        currRow.variant = sect /*.substr(1,sect.length()-2); */;
-                        break;
-                    case 2:
-                        currRow.area = sect /*.substr(1,sect.length()-2); */;
-                        break;
-                    case 3:
-                        currRow.notes = sect /*.substr(1,sect.length()-2); */;
-                        break;
-                    case 4: 
-                        cout << sect;
-                        currRow.countryCode = stoi(sect);
-                        break;
-                    case 5:
-                        currRow.fiftyToFiftyfive = stod(sect);
-                        break;
-                    case 6:
-                        currRow.fiftyFiveToSitxy = stod(sect);
-                        break;
-                    case 7:
-                        currRow.sixtyToSixtyFive = stod(sect);
-                        break;
-                    case 8:
-                        currRow.sixtyFivetoSeventyFive = stod(sect);
-                        break;
-                    case 9:
-                        currRow.seventyFivetoEighty = stod(sect);
-                        break;
-                    case 10:
-                        currRow.eightyFiveToNinety = stod(sect);
-                        break;
-                    case 11:
-                        currRow.ninetyToNinetyFive = stod(sect);
-                        break;
-                    case 12:
-                        currRow.ninetyFiveToTwoThousand = stod(sect);
-                        break;
-                    case 13:
-                        currRow.twoThousandToTwoThousandFive = stod(sect);
-                        break;
-                    case 14:
-                        currRow.fiveToTen = stod(sect);
-                        break;
-                    case 15:
-                        currRow.tenToFifteen = stod(sect);
-                        break;
-                    
-                } 
-                buildInc++;
-                sect = "";
-                
-                idxSt = idxEn;
+            lnNum++;
+            if (lnNum <= 17) {
+                continue; 
             }
-            buildInc = 0;
+
+            rowData currRow; 
+            string sect = "";
+            int buildInc = 0;
+            bool inQuotes = false;
+            for (size_t i = 0; i < line.size(); i++){
+                char c = line[i];
+                if (c == '"') {
+                    if (inQuotes && i + 1 < line.size() && line[i + 1] == '"') {
+                        sect.push_back('"');
+                        i++; 
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (c == ',' && !inQuotes) {
+                    switch (buildInc) {
+                        case 0: currRow.idx = parseIntSafe(sect); break;
+                        case 1: currRow.variant = sect; break;
+                        case 2: currRow.area = sect; break;
+                        case 3: currRow.notes = sect; break;
+                        case 4: currRow.countryCode = parseIntSafe(sect); break;
+                        case 5: currRow.fiftyToFiftyfive = parseDoubleSafe(sect); break;
+                        case 6: currRow.fiftyFiveToSitxy = parseDoubleSafe(sect); break;
+                        case 7: currRow.sixtyToSixtyFive = parseDoubleSafe(sect); break;
+                        case 8: currRow.sixtyFivetoSeventyFive = parseDoubleSafe(sect); break;
+                        case 9: currRow.seventyFivetoEighty = parseDoubleSafe(sect); break;
+                        case 10: currRow.eightyFiveToNinety = parseDoubleSafe(sect); break;
+                        case 11: currRow.ninetyToNinetyFive = parseDoubleSafe(sect); break;
+                        case 12: currRow.ninetyFiveToTwoThousand = parseDoubleSafe(sect); break;
+                        case 13: currRow.twoThousandToTwoThousandFive = parseDoubleSafe(sect); break;
+                        case 14: currRow.fiveToTen = parseDoubleSafe(sect); break;
+                        case 15: currRow.tenToFifteen = parseDoubleSafe(sect); break;
+                        default: break;
+                    }
+                    buildInc++;
+                    sect.clear();
+                } else {
+                    sect.push_back(c);
+                }
+            }
+            // process last field (if any)
+            if (!inQuotes) {
+                switch (buildInc) {
+                    case 0: currRow.idx = parseIntSafe(sect); break;
+                    case 1: currRow.variant = sect; break;
+                    case 2: currRow.area = sect; break;
+                    case 3: currRow.notes = sect; break;
+                    case 4: currRow.countryCode = parseIntSafe(sect); break;
+                    case 5: currRow.fiftyToFiftyfive = parseDoubleSafe(sect); break;
+                    case 6: currRow.fiftyFiveToSitxy = parseDoubleSafe(sect); break;
+                    case 7: currRow.sixtyToSixtyFive = parseDoubleSafe(sect); break;
+                    case 8: currRow.sixtyFivetoSeventyFive = parseDoubleSafe(sect); break;
+                    case 9: currRow.seventyFivetoEighty = parseDoubleSafe(sect); break;
+                    case 10: currRow.eightyFiveToNinety = parseDoubleSafe(sect); break;
+                    case 11: currRow.ninetyToNinetyFive = parseDoubleSafe(sect); break;
+                    case 12: currRow.ninetyFiveToTwoThousand = parseDoubleSafe(sect); break;
+                    case 13: currRow.twoThousandToTwoThousandFive = parseDoubleSafe(sect); break;
+                    case 14: currRow.fiveToTen = parseDoubleSafe(sect); break;
+                    case 15: currRow.tenToFifteen = parseDoubleSafe(sect); break;
+                    default: break;
+                }
+            }
+
             data.push_back(currRow);
         }
-        }
         CSV.close();
-
     }
-    else cout << "Can't open that stuff";
+    else {
+        cout << "Can't open that stuff";
+    }
+    
+    // Print out the vector contents
+    cout << "Loaded rows: " << data.size() << "\n";
+    for (const auto &r : data) {
+        cout 
+            << r.idx << ','
+            << '"' << r.variant << '"' << ','
+            << '"' << r.area << '"' << ','
+            << '"' << r.notes << '"' << ','
+            << r.countryCode << ','
+            << r.fiftyToFiftyfive << ','
+            << r.fiftyFiveToSitxy << ','
+            << r.sixtyToSixtyFive << ','
+            << r.sixtyFivetoSeventyFive << ','
+            << r.seventyFivetoEighty << ','
+            << r.eightyFiveToNinety << ','
+            << r.ninetyToNinetyFive << ','
+            << r.ninetyFiveToTwoThousand << ','
+            << r.twoThousandToTwoThousandFive << ','
+            << r.fiveToTen << ','
+            << r.tenToFifteen
+            << '\n';
+    }
     
     return 0; 
 }
