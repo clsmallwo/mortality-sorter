@@ -15,7 +15,8 @@ struct rowData {
     double fiftyToFiftyfive;
     double fiftyFiveToSitxy;
     double sixtyToSixtyFive; 
-    double sixtyFivetoSeventyFive;
+    double sixtyFiveToSeventy;
+    double seventytoSeventyFive;
     double seventyFivetoEighty;
     double eightyToEightyFive;
     double eightyFiveToNinety; 
@@ -25,6 +26,19 @@ struct rowData {
     double fiveToTen;
     double tenToFifteen;  
 };
+
+void simpleSortVector(vector<rowData> &data)
+{
+ 
+	
+	for (int i=0; i < data.size(); i++)
+		for (int j=i; j < data.size(); j++)
+		if ((data[i].twoThousandToTwoThousandFive) < data[j].twoThousandToTwoThousandFive)
+		{
+            swap(data[i],data[j]);
+		}
+} 
+
 
 static int parseIntSafe(const string &text) {
     try {
@@ -56,7 +70,7 @@ int main() {
     if (CSV.is_open()){
         while (getline(CSV, line)) {
             lnNum++;
-            if (lnNum <= 17) {
+            if (lnNum <= 18) {
                 continue; 
             }
 
@@ -83,14 +97,15 @@ int main() {
                         case 5: currRow.fiftyToFiftyfive = parseDoubleSafe(sect); break;
                         case 6: currRow.fiftyFiveToSitxy = parseDoubleSafe(sect); break;
                         case 7: currRow.sixtyToSixtyFive = parseDoubleSafe(sect); break;
-                        case 8: currRow.sixtyFivetoSeventyFive = parseDoubleSafe(sect); break;
-                        case 9: currRow.seventyFivetoEighty = parseDoubleSafe(sect); break;
-                        case 10: currRow.eightyFiveToNinety = parseDoubleSafe(sect); break;
-                        case 11: currRow.ninetyToNinetyFive = parseDoubleSafe(sect); break;
-                        case 12: currRow.ninetyFiveToTwoThousand = parseDoubleSafe(sect); break;
-                        case 13: currRow.twoThousandToTwoThousandFive = parseDoubleSafe(sect); break;
-                        case 14: currRow.fiveToTen = parseDoubleSafe(sect); break;
-                        case 15: currRow.tenToFifteen = parseDoubleSafe(sect); break;
+                        case 8: currRow.sixtyFiveToSeventy = parseDoubleSafe(sect); break;
+                        case 9: currRow.seventytoSeventyFive = parseDoubleSafe(sect); break;
+                        case 10: currRow.seventyFivetoEighty = parseDoubleSafe(sect); break;
+                        case 11: currRow.eightyFiveToNinety = parseDoubleSafe(sect); break;
+                        case 12: currRow.ninetyToNinetyFive = parseDoubleSafe(sect); break;
+                        case 13: currRow.ninetyFiveToTwoThousand = parseDoubleSafe(sect); break;
+                        case 14: currRow.twoThousandToTwoThousandFive = parseDoubleSafe(sect); break;
+                        case 15: currRow.fiveToTen = parseDoubleSafe(sect); break;
+                        case 16: currRow.tenToFifteen = parseDoubleSafe(sect); break;
                         default: break;
                     }
                     buildInc++;
@@ -109,7 +124,7 @@ int main() {
                     case 5: currRow.fiftyToFiftyfive = parseDoubleSafe(sect); break;
                     case 6: currRow.fiftyFiveToSitxy = parseDoubleSafe(sect); break;
                     case 7: currRow.sixtyToSixtyFive = parseDoubleSafe(sect); break;
-                    case 8: currRow.sixtyFivetoSeventyFive = parseDoubleSafe(sect); break;
+                    case 8: currRow.sixtyFiveToSeventy = parseDoubleSafe(sect); break;
                     case 9: currRow.seventyFivetoEighty = parseDoubleSafe(sect); break;
                     case 10: currRow.eightyFiveToNinety = parseDoubleSafe(sect); break;
                     case 11: currRow.ninetyToNinetyFive = parseDoubleSafe(sect); break;
@@ -129,9 +144,19 @@ int main() {
         cout << "Can't open that stuff";
     }
     
-    cout << "Loaded rows: " << data.size() << "\n";
-    for (const auto &r : data) {
-        cout 
+    simpleSortVector(data);
+    int rank = 0;
+    
+    vector<rowData> developedData;
+
+    ofstream outFile("sorted.csv");
+    ofstream outFileD("sorteddeveloped.csv");
+
+
+
+     for (const auto &r : data) {
+        rank++;
+        outFile 
             << r.idx << ','
             << '"' << r.variant << '"' << ','
             << '"' << r.area << '"' << ','
@@ -140,7 +165,7 @@ int main() {
             << r.fiftyToFiftyfive << ','
             << r.fiftyFiveToSitxy << ','
             << r.sixtyToSixtyFive << ','
-            << r.sixtyFivetoSeventyFive << ','
+            << r.sixtyFiveToSeventy << ','
             << r.seventyFivetoEighty << ','
             << r.eightyFiveToNinety << ','
             << r.ninetyToNinetyFive << ','
@@ -148,8 +173,43 @@ int main() {
             << r.twoThousandToTwoThousandFive << ','
             << r.fiveToTen << ','
             << r.tenToFifteen
+          //  << "\n RANK:" << rank
+            << '\n';
+
+        string developedCountries[] = {"Germany", "France", "Japan", "Australia"}
+        while (country << developedCountries){
+
+        }
+        if (r.area == "EUROPE" || r.area == "NORTHERN AMERICA" || r.area == "Australia/New Zealand" || r.area == "Japan" || r.area == "United States of America") developedData.push_back(r)}
+            outFile.close();
+
+
+    rank = 0;
+    cout << "\n======================================\n\n";
+
+    for (const auto j: developedData){
+        outFileD 
+            << j.idx << ','
+            << '"' << j.variant << '"' << ','
+            << '"' << j.area << '"' << ','
+            << '"' << j.notes << '"' << ','
+            << j.countryCode << ','
+            << j.fiftyToFiftyfive << ','
+            << j.fiftyFiveToSitxy << ','
+            << j.sixtyToSixtyFive << ','
+            << j.sixtyFiveToSeventy << ','
+            << j.seventyFivetoEighty << ','
+            << j.eightyFiveToNinety << ','
+            << j.ninetyToNinetyFive << ','
+            << j.ninetyFiveToTwoThousand << ','
+            << j.twoThousandToTwoThousandFive << ','
+            << j.fiveToTen << ','
+            << j.tenToFifteen
+        //    << "\n RANK:" << rank
             << '\n';
     }
-    
+    outFileD.close();
+
+
     return 0; 
 }
