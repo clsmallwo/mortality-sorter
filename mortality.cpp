@@ -62,6 +62,25 @@ static double parseDoubleSafe(const string &text) {
     }
 }
 
+static bool isThisARegion(string& s){
+    for (char c : s) {
+        cout << c;
+         if(c == '/' || c == '-') return true;
+        if (c != ' '){
+        if (!std::isupper(c)) {
+            return false;
+        }
+        }
+    }
+    switch(s){
+        case "
+    }
+    
+    return false;
+            
+    
+}
+
 int main() {
     ifstream CSV ("WPP2015_MORT_F07_1_LIFE_EXPECTANCY_0_BOTH_SEXES.csv");
     string line = "";
@@ -77,6 +96,7 @@ int main() {
             rowData currRow; 
             string sect = "";
             int buildInc = 0;
+            
             bool inQuotes = false;
             for (size_t i = 0; i < line.size(); i++){
                 char c = line[i];
@@ -152,10 +172,21 @@ int main() {
     ofstream outFile("sorted.csv");
     ofstream outFileD("sorteddeveloped.csv");
 
+    vector<string> developedCountries{"Japan", "Italy", "Switzerland", "Iceland", "Spain", "Australia", 
+            "Sweden", "France", "Canada", "New Zealand", "Luxembourg", "Norway", "Netherlands", "Micronesia (Fed. States of)", 
+            "Austria", "Germany", "Greece", "Ireland", "Portugal", "Belgium", "Finland", "United Kingdom", "Malta", 
+            "Slovenia", "Denmark", "Cyprus", "United States of America", "Czech Republic", "Albania", "Poland", "Croatia", 
+            "Bosnia and Herzegovina", "Slovakia", "Montenegro", "Hungary", "Romania", "Armenia", "Bulgaria", "Latvia", 
+            "Lithuania", "Republic of Moldova", "Belarus", "Ukraine", "Russian Federation"};
 
 
-     for (const auto &r : data) {
+     for (const rowData &r : data) {
         rank++;
+
+        string temp = r.area;
+
+
+        if(!isThisARegion(temp)) {
         outFile 
             << r.idx << ','
             << '"' << r.variant << '"' << ','
@@ -175,19 +206,24 @@ int main() {
             << r.tenToFifteen
           //  << "\n RANK:" << rank
             << '\n';
-
-        string developedCountries[] = {"Germany", "France", "Japan", "Australia"}
-        while (country << developedCountries){
-
         }
-        if (r.area == "EUROPE" || r.area == "NORTHERN AMERICA" || r.area == "Australia/New Zealand" || r.area == "Japan" || r.area == "United States of America") developedData.push_back(r)}
-            outFile.close();
+
+            for (int i = 0; i < developedCountries.size(); i++) { 
+                if (developedCountries[i] == r.area) {
+                developedData.push_back(r);
+                }
+            }
+
+
+        
+     }
+    outFile.close();
 
 
     rank = 0;
     cout << "\n======================================\n\n";
 
-    for (const auto j: developedData){
+    for (const rowData j: developedData){
         outFileD 
             << j.idx << ','
             << '"' << j.variant << '"' << ','
