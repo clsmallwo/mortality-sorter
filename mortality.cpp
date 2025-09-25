@@ -73,8 +73,9 @@ static bool isThisARegion(string& s){
         }
     }
     switch(s){
-        case "
-    }
+
+    vector<string> regions{"g"};    
+            
     
     return false;
             
