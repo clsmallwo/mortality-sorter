@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <cctype>
 
 
 using namespace std; 
@@ -63,23 +64,62 @@ static double parseDoubleSafe(const string &text) {
 }
 
 static bool isThisARegion(string& s){
-    for (char c : s) {
-        cout << c;
-         if(c == '/' || c == '-') return true;
-        if (c != ' '){
-        if (!std::isupper(c)) {
-            return false;
-        }
-        }
-    }
-    switch(s){
+	string t = s;
+	int left = 0;
+	while (left < t.size() && t[left] == ' ') left++;
+	if (left == t.size()) return false;
+	int right = t.size() - 1;
+	while (right > left && t[right] == ' ') right--;
+	t = t.substr(left, right - left + 1);
 
-    vector<string> regions{"g"};    
-            
-    
-    return false;
-            
-    
+	string l;
+	for (int i = 0; i < t.size(); i++) {
+		char c = t[i];
+		l.push_back((char)tolower(c));
+	}
+
+	if (l.find('/') != string::npos) return true;
+	if (l.find("region") != string::npos) return true;
+	if (l.find("countries") != string::npos) return true;
+	if (l.find("income") != string::npos) return true;
+
+	const char* regionNames[] = {
+		"world",
+		"africa",
+		"asia",
+		"europe",
+		"oceania",
+		"northern america",
+		"latin america and the caribbean",
+		"latin america",
+		"caribbean",
+		"central america",
+		"south america",
+		"sub-saharan africa",
+		"eastern africa",
+		"middle africa",
+		"northern africa",
+		"southern africa",
+		"western africa",
+		"eastern asia",
+		"south-eastern asia",
+		"southern asia",
+		"central asia",
+		"western asia",
+		"eastern europe",
+		"northern europe",
+		"southern europe",
+		"western europe",
+		"australia/new zealand",
+		"melanesia",
+		"micronesia",
+		"polynesia"
+	};
+	int n = sizeof(regionNames) / sizeof(regionNames[0]);
+	for (int i = 0; i < n; i++) {
+		if (l == regionNames[i]) return true;
+	}
+	return false;
 }
 
 int main() {
