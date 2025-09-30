@@ -222,6 +222,8 @@ int main() {
 
 
      for (const rowData &r : data) {
+
+      
         rank++;
 
         string temp = r.area;
@@ -232,12 +234,13 @@ int main() {
             << r.idx << ','
             << '"' << r.variant << '"' << ','
             << '"' << r.area << '"' << ','
-            << '"' << r.notes << '"' << ','
+            << '"' << r.notes << '"' << ',' 
             << r.countryCode << ','
             << r.fiftyToFiftyfive << ','
             << r.fiftyFiveToSitxy << ','
             << r.sixtyToSixtyFive << ','
             << r.sixtyFiveToSeventy << ','
+            << r.seventytoSeventyFive << ','
             << r.seventyFivetoEighty << ','
             << r.eightyFiveToNinety << ','
             << r.ninetyToNinetyFive << ','
@@ -275,6 +278,7 @@ int main() {
             << j.fiftyFiveToSitxy << ','
             << j.sixtyToSixtyFive << ','
             << j.sixtyFiveToSeventy << ','
+            << j.seventytoSeventyFive << ','
             << j.seventyFivetoEighty << ','
             << j.eightyFiveToNinety << ','
             << j.ninetyToNinetyFive << ','
